@@ -1,21 +1,16 @@
 import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * Author: GalaxyXL
  * DateCteate in 2019-04-15 17:24
  */
 
-public class FtpServer implements FtpServerRepository, Runnable {
-    ServerSocket socket;
+public class FtpServer extends Thread {
+    private Socket socket;
 
-    private FtpServer(){
-
-    }
-
-    private static FtpServer ftpServer = new FtpServer();
-
-    public static FtpServerRepository getInstance() {
-        return ftpServer;
+    FtpServer(Socket socket){
+        this.socket = socket;
     }
 
     @Override
