@@ -10,17 +10,18 @@ import java.net.Socket;
 
 public class FtpModel {
 
-    public void sendFile(String fileName, DataOutputStream dataOutputStream){
+    public void sendFile(String fileName, OutputStream OutputStream){
         try {
             File file = new File(FtpMainThread.folder + fileName);
             FileInputStream fileInputStream = new FileInputStream(file);
             byte[] buff = new byte[1024];
             int length;
             while ((length = fileInputStream.read(buff)) != -1) {
-                dataOutputStream.write(buff, 0, length);
+                OutputStream.write(buff, 0, length);
                 //dataOutputStream.flush();
             }
-            dataOutputStream.flush();
+            OutputStream.flush();
+            fileInputStream.close();
         } catch (FileNotFoundException nfe) {
             nfe.printStackTrace();
         } catch (IOException ioe) {
@@ -28,30 +29,37 @@ public class FtpModel {
         }
     }
 
-    public void sendFileList(String path, BufferedWriter bufferedWriter) {
+    public void sendFileList(String path, OutputStream outputStream) {
         try {
             File file = new File(path);
             File[] files = file.listFiles();
+            BufferedWriter br = new BufferedWriter(new OutputStreamWriter(outputStream));
             for (File f : files) {
-                bufferedWriter.write(f.getName() + "\n");
+                br.write(f.getName() + "\n");
             }
+            br.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void receiveFile(String fileName, DataInputStream dataInputStream) {
+    public void receiveFile(String fileName, InputStream inputStream) {
         try {
             File file = new File(FtpMainThread.folder + fileName);
+            System.out.println(fileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
             DataOutputStream dataOutputStream = new DataOutputStream(
-                    new BufferedOutputStream(new FileOutputStream(file)));
+                    new BufferedOutputStream(fileOutputStream));
             int length;
             byte[] buff = new byte[1024];
-            while ((length = dataInputStream.read(buff)) != -1) {
+            while ((length = inputStream.read(buff)) != -1) {
                 dataOutputStream.write(buff, 0, length);
-                //dataOutputStream.flush();
+                dataOutputStream.flush();
             }
+            fileOutputStream.close();
             dataOutputStream.flush();
+
+            //dataOutputStream.close();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }

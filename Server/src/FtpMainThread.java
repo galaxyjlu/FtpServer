@@ -8,7 +8,7 @@ import java.net.Socket;
  */
 
 public class FtpMainThread {
-    static String folder;
+    static String folder = "D:\\benzi\\test\\";
 
     //Server socket
     private ServerSocket serverSocket = null;
@@ -37,7 +37,9 @@ public class FtpMainThread {
     }
 
     public static void main(String[] args) {
-        FtpModel ftpModel = new FtpModel();
+        FtpMainThread mainThread = new FtpMainThread(8080);
+        mainThread.startMainThread();
+        //FtpModel ftpModel = new FtpModel();
         //ftpModel.sendFileList("D:\\benzi\\");
     }
 
